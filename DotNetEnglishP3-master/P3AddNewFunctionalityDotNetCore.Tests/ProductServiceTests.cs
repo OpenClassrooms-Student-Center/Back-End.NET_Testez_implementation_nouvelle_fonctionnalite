@@ -43,7 +43,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
                 {
                     Name = "Test",
                     Stock = "1",
-                    Price = "1,5"
+                    Price = "1.5"
                 };
 
                 // Act
