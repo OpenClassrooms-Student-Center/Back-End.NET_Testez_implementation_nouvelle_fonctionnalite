@@ -7,7 +7,7 @@ using P3AddNewFunctionalityDotNetCore.Models.Services;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 using System.Collections.Generic;
 
-namespace P3AddNewFunctionalityDotNetCore.Tests
+namespace P3AddNewFunctionalityDotNetCore.Tests.Unit
 {
     public class ProductServiceTests
     {
@@ -24,6 +24,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
                 mockCart = new Mock<ICart>();
                 mockProductRepository = new Mock<IProductRepository>();
                 mockOrderRepository = new Mock<IOrderRepository>();
+                // Map localized error messages to the localizer mock
                 mockLocalizer = new Mock<IStringLocalizer<ProductService>>();
                 foreach (var property in typeof(Resources.ProductService).GetProperties())
                 {
