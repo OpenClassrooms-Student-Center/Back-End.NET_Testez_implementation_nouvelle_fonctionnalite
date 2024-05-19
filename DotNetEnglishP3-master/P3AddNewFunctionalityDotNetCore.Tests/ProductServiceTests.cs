@@ -6,6 +6,8 @@ using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.Services;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
@@ -84,37 +86,109 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             // Assert
             // Verification des résultats de la méthode
             Assert.Equal(_productTestEntities.Count, result.Count);
+            for (int i = 0; i < _productTestEntities.Count; i++)
+            {
+                Assert.Equal(_productTestEntities[i].Id, result[i].Id);
+                Assert.Equal(_productTestEntities[i].Name, result[i].Name);
+                Assert.Equal(_productTestEntities[i].Price, result[i].Price);
+                Assert.Equal(_productTestEntities[i].Description, result[i].Description);
+                Assert.Equal(_productTestEntities[i].Details, result[i].Details);
+                Assert.Equal(_productTestEntities[i].Quantity, result[i].Quantity);
+            }
 
         }
 
         [Fact]
-        public void GetProductByIdViewModelTest_ParametreEntre_SortieAttendue() { }
+        public void GetProductByIdViewModelTest_ParametreEntre_SortieAttendue()
+        {
+            // Arrange
+            // Les éléments necessaires sont construits une seule fois
+            // dans le constructeur de la classe
+
+            // Act & Assert
+            // Apeller la méthode GetProductByIdViewModel en passant un ID en parametre
+            var result = _productService.GetProductByIdViewModel(1);
+            Assert.NotNull(result);
+            var result2 = _productService.GetProductByIdViewModel(2);
+            Assert.NotNull(result2);
+            var result3 = _productService.GetProductByIdViewModel(3);
+            Assert.NotNull(result3);
+            var falseResult = _productService.GetProductByIdViewModel(12);
+            Assert.Null(falseResult);
+        }
 
         [Fact]
         public void GetProductByIdTest_PourUnIdDeProduit_RetourneLeProduitCorrespondant() 
         {
             // Arrange
-            // Creer une liste de produits fictifs, avec ID
-            // Créer une instance de ProductService
+            // Les éléments necessaires sont construits une seule fois
+            // dans le constructeur de la classe
 
-            // Act
+            // Act & Assert
             // Apeller la méthode GetProductById en passant un ID en parametre
-
-            // Assert
-            //Assert.Equals(produit avec l'id dans ma liste, resultat de mon appel de méthode)
+            var result = _productService.GetProductById(1);
+            Assert.NotNull(result);
+            var result2 = _productService.GetProductById(2);
+            Assert.NotNull(result2);
+            var result3 = _productService.GetProductById(3);
+            Assert.NotNull(result3);
+            var falseResult = _productService.GetProductById(12);
+            Assert.Null(falseResult);
         }
 
         [Fact]
-        public void GetProductTest_ParametreEntre_SortieAttendue() { }
+        public async Task GetProductTest_QuandLeProduitExiste_RetourneLeProduitAttendu() 
+        {
+            // Arrange
+            // Initialisation du premier produit et du mock (en Asynchrone)
+            var produitAttendu = _productTestEntities.First();
+            _productRepositoryMock.Setup(x => x.GetProduct(produitAttendu.Id)).ReturnsAsync(produitAttendu);
+
+            // Act
+            // Appel de la méthode en Assynchrone
+            var result = await _productService.GetProduct(produitAttendu.Id);
+
+            // Assert
+            Assert.Equal(produitAttendu, result);
+        }
 
         [Fact]
-        public void GetProductTest_ByList_ParametreEntre_SortieAttendue() { }
+        public async Task GetProductTest_ByList_SiLesProduitsExistent_RetourneLaListeDesProduits()
+        {
+            // Arrange
+            // Configuration du Mock pour un resultat Asynchrone
+            _productRepositoryMock.Setup(x => x.GetProduct()).ReturnsAsync(_productTestEntities);
+
+            // Act
+            // Appel de la méthode en Assynchrone
+            var result = await _productService.GetProduct();
+
+            // Assert
+            Assert.IsType<List<Product>>(result);
+            Assert.Equal(_productTestEntities, result);
+        }
+
 
         [Fact]
-        public void UpdateProductQuantitiesTest_ParametreEntre_SortieAttendue() { }
+        public void UpdateProductQuantitiesTest_PourUnPanierAvecDesProduits_MettreAJourLeStockDesProduits()
+        {
+            // Arrange
+            
+            // Act
+
+            // Assert
+        }
+
 
         [Fact]
-        public void SaveProduct_ParametreEntre_SortieAttendue() { }
+        public void SaveProduct_ParametreEntre_SortieAttendue() 
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
 
         [Fact]
         public void MapToProductEntityTest_ParametreEntre_SortieAttendue() { }
