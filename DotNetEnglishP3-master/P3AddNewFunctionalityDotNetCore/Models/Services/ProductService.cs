@@ -90,8 +90,8 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             }
         }
 
-        // TODO this is an example method, remove it and perform model validation using data annotations
-        public List<string> CheckProductModelErrors(ProductViewModel product)
+        // TODO : DONE this is an example method, remove it and perform model validation using data annotations
+/*        public List<string> CheckProductModelErrors(ProductViewModel product)
         {
             List<string> modelErrors = new List<string>();
             if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
@@ -114,7 +114,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
                     modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
             }
 
-            if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
+/           if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
             {
                 modelErrors.Add(_localizer["MissingQuantity"]);
             }
@@ -131,7 +131,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
             return modelErrors;
         }
-
+*/
         public void SaveProduct(ProductViewModel product)
         {
             var productToAdd = MapToProductEntity(product);
@@ -143,7 +143,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             Product productEntity = new Product
             {
                 Name = product.Name,
-                Price = double.Parse(product.Price),
+                Price = double.Parse(product.Price, CultureInfo.InvariantCulture),
                 Quantity = Int32.Parse(product.Stock),
                 Description = product.Description,
                 Details = product.Details
