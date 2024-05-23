@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DotNetEnglishP3-master/P3AddNewFunctionalityDotNetCore.Tests/ProductServiceTests_invalide.cs

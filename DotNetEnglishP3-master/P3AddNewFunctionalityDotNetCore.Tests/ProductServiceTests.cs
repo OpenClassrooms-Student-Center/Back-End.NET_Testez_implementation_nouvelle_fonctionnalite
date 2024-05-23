@@ -1,4 +1,5 @@
 ﻿using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -29,7 +30,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             // Act
             // On test la validation via la méthode "TryValidatorObject" qui prends
             // les trois éléments en parametre (l'instance, le contexte, et les resultats)
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
             Assert.False(isValid); // On vérifie que la validation echoue bien
@@ -46,7 +47,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var validationResults = new List<ValidationResult>();
 
             // Act
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
             Assert.False(isValid);
@@ -63,14 +64,14 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var validationResults = new List<ValidationResult>();
 
             // Act
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
             Assert.False(isValid);
-            Assert.Single(validationResults);
-            Assert.Equal("PriceNotANumber", validationResults[0].ErrorMessage);
+            Assert.Equal(2, validationResults.Count);
+            Assert.Contains(validationResults, v => v.ErrorMessage == "PriceNotANumber");
+            Assert.Contains(validationResults, v => v.ErrorMessage == "PriceNotGreaterThanZero");
         }
-
 
 
         [Fact]
@@ -78,19 +79,16 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         {
             // Arrange
             var pVMTest = new ProductViewModel { Name = "test", Price = "0", Stock = "123" };
-
             var validationContext = new ValidationContext(pVMTest);
-
             var validationResults = new List<ValidationResult>();
 
             // Act
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
             Assert.False(isValid);
             Assert.Single(validationResults);
             Assert.Equal("PriceNotGreaterThanZero", validationResults[0].ErrorMessage);
-
         }
 
         [Fact]
@@ -103,7 +101,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var validationResults = new List<ValidationResult>();
 
             // Act
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
             Assert.False(isValid);
@@ -115,18 +113,20 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         public void ProductViewModel_StockDoitEtreUnEntier_RetourneMessageErreurAssocie()
         {
             // Arrange
-            var pVMTest = new ProductViewModel { Name = "test", Price = "12.3", Stock = "12.3" };
+            var pVMTest = new ProductViewModel { Name = "test", Price = "12.3", Stock = "abc" };
 
             var validationContext = new ValidationContext(pVMTest);
             var validationResults = new List<ValidationResult>();
 
             // Act
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
+            // Assert
             Assert.False(isValid);
-            Assert.Single(validationResults);
-            Assert.Equal("StockNotAnInteger", validationResults[0].ErrorMessage);
+            Assert.Equal(2, validationResults.Count);
+            Assert.Contains(validationResults, v => v.ErrorMessage == "StockNotAnInteger");
+            Assert.Contains(validationResults, v => v.ErrorMessage == "StockNotGreaterThanZero");
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var validationResults = new List<ValidationResult>();
 
             // Act
-            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults);
+            bool isValid = Validator.TryValidateObject(pVMTest, validationContext, validationResults, true);
 
             // Assert
             Assert.False(isValid);
